@@ -1,8 +1,9 @@
 package com.airbnb.projects.airBnbWebApp.dto;
 
 import com.airbnb.projects.airBnbWebApp.entity.HotelContactInfo;
+import lombok.Data;
 
-
+@Data
 public class HotelDto {
     private Long id;
     private String name;
