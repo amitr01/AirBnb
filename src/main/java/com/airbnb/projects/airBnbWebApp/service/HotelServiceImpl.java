@@ -85,8 +85,6 @@ public class HotelServiceImpl implements HotelService {
             inventoryService.intializeRoomForAYear(room);
         }
 
-
-
     }
 
     @Override

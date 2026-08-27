@@ -4,9 +4,12 @@ import com.airbnb.projects.airBnbWebApp.dto.RoomPriceDto;
 import com.airbnb.projects.airBnbWebApp.entity.Hotel;
 import com.airbnb.projects.airBnbWebApp.entity.Inventory;
 import com.airbnb.projects.airBnbWebApp.entity.Room;
+import jakarta.persistence.LockModeType;
+import org.springframework.cglib.core.Local;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -38,6 +41,22 @@ public interface InventoryRepository extends JpaRepository<Inventory,Long> {
             Pageable pageable
     );
 
+
+    @Query("""
+            SELECT i
+            FROM Inventory i
+            where i.room.id=:roomId
+            AND i.date BETWEEN :startDate And :endDate
+            AND i.closed = false
+            AND (i.totalCount-i.bookedCount -i.reservedCount)>=:roomCount""")
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    List<Inventory> findAndLockAvailableInventory(
+            @Param("roomId") Long roomId,
+            @Param("startDate") LocalDate startDate,
+            @Param("endDate") LocalDate endDate,
+            @Param("roomsCount") Integer roomsCount
+            );
+
     @Query("""
        SELECT new com.airbnb.projects.airBnbWebApp.dto.RoomPriceDto(
             i.room,
@@ -60,4 +79,6 @@ public interface InventoryRepository extends JpaRepository<Inventory,Long> {
             @Param("roomsCount") Long roomsCount,
             @Param("dateCount") Long dateCount
     );
+
+    List<Inventory> findByHotelAndDateBetween(Hotel hotel, LocalDate startDate, LocalDate endDate);
 }
