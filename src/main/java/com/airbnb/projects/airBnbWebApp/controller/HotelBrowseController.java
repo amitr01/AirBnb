@@ -1,9 +1,6 @@
 package com.airbnb.projects.airBnbWebApp.controller;
 
-import com.airbnb.projects.airBnbWebApp.dto.HotelDto;
-import com.airbnb.projects.airBnbWebApp.dto.HotelInfoDto;
-import com.airbnb.projects.airBnbWebApp.dto.HotelInfoRequestDto;
-import com.airbnb.projects.airBnbWebApp.dto.HotelSearchRequest;
+import com.airbnb.projects.airBnbWebApp.dto.*;
 import com.airbnb.projects.airBnbWebApp.service.HotelService;
 import com.airbnb.projects.airBnbWebApp.service.InventoryService;
 import lombok.RequiredArgsConstructor;
@@ -20,8 +17,8 @@ public class HotelBrowseController {
     private final HotelService hotelService;
 
     @GetMapping("/search")
-    public ResponseEntity<Page<HotelDto>> searchHotel(@RequestBody HotelSearchRequest hotelSearchRequest) {
-        Page<HotelDto> page = inventoryService.searchHotels(hotelSearchRequest);
+    public ResponseEntity<Page<HotelPriceDto>> searchHotel(@RequestBody HotelSearchRequest hotelSearchRequest) {
+        var page = inventoryService.searchHotels(hotelSearchRequest);
         return ResponseEntity.ok(page);
     }
 
